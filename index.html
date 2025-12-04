@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamer Trófeák</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+</head>
+<body>
+
+    <header>
+        <h1>🏆 Achievement Hunter</h1> 
+        <div class="header-controls">
+            <input type="text" id="searchInput" placeholder="Keresés..." onkeyup="filterGames()">
+            
+            <button id="addBtn" onclick="openModal()">+ Új Játék</button>
+        </div>
+    </header>
+
+    <div id="dashboard" class="dashboard-container">
+        <div class="stat-card game-stat">
+            <div class="stat-icon-box">
+                <span>🎮</span>
+            </div>
+            <div class="stat-text-box">
+                <h3>Játékok</h3>
+                <p id="stat-games-count">0</p>
+            </div>
+        </div>
+
+        <div class="stat-card trophy-stat">
+            <div class="stat-icon-box">
+                <span>🏆</span>
+            </div>
+            <div class="stat-text-box">
+                <h3>Megszerzett Trófeák</h3>
+                <p id="stat-trophies-count">0</p>
+            </div>
+        </div>
+    </div>
+
+   <main id="games-gallery"></main>
+
+    <div id="trophy-view" style="display: none;">
+        <div class="trophy-header">
+            <button onclick="backToGames()" class="back-btn">⬅ Vissza</button>
+            <h2 id="current-game-title">Játék Neve</h2>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-info">
+                <span id="progress-text">0 / ?? Teljesítmény elérve</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="trophies-list"></div>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Új Hozzáadása</h2>
+            
+            <div id="game-fields">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="apiSearchInput" placeholder="Keresés a RAWG adatbázisban..." style="margin: 0;">
+                    <button onclick="searchRAWG()" style="width: auto; margin: 0; padding: 10px 15px;">🔍</button>
+                </div>
+                
+                <div id="api-results"></div>
+
+                <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+
+                <label style="display: block; text-align: left; font-size: 12px; color: #888;">Játék címe:</label>
+                <input type="text" placeholder="Játék neve" id="gameNameInput">
+                
+                <label style="display: block; text-align: left; font-size: 12px; color: #888;">Összes trófea száma:</label>
+                <input type="number" placeholder="Pl. 50" id="totalTrophiesInput">
+                
+                <input type="hidden" id="apiImageURL">
+            </div>
+
+            <div id="trophy-fields" style="display: none;">
+                
+                <input type="text" placeholder="Achievement neve" id="achievNameInput">
+                <input type="text" placeholder="Rövid leírás" id="achievDescInput">
+                <input type="date" id="achievDateInput" style="color-scheme: dark;">
+                
+                <input type="hidden" id="trophyApiImageURL">
+            </div>
+            
+            <input type="file" id="imageFile" accept="image/*">
+            <button class="save-btn">Mentés</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Gamer Napló - Zoly - &copy; 2025 • <span style="color: #00ff88;">Level 100 Boss</span></p>
+    </footer>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+    <script>
+        // IDE MÁSOLD BE A FIREBASE CONSOLE-RÓL A SAJÁT KULCSAIDAT!
+        // (A const firebaseConfig = { ... } részt)
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaBu05PoBjAeu9OjEr46dAoFlhREWtM94",
+            authDomain: "gamer-naplo-sajat.firebaseapp.com",
+            projectId: "gamer-naplo-sajat",
+            storageBucket: "gamer-naplo-sajat.firebasestorage.app",
+            messagingSenderId: "303919191912",
+            appId: "1:303919191912:web:8883f3f538e333cae8e8dd"
+        };
+
+        // 3. Firebase indítása
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(); // Ezzel érjük el az adatbázist
+        console.log("Firebase sikeresen csatlakoztatva!");
+    </script>
+
+    <script src="app.js"></script>
+    <div id="toast-container"></div>
+</body>
+</html>
